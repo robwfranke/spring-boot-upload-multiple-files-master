@@ -40,7 +40,6 @@ public class FilesController {
       List<String> fileNames = new ArrayList<>();
 
       for (MultipartFile file : Arrays.asList(files)) {
-//        log.debug(file[0].getName());
         filesStorageService.save(file);
         fileNames.add(file.getOriginalFilename());
       }
