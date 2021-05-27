@@ -33,6 +33,4 @@ public class FileEntity {
 
     @Lob
     private byte[] data;
-
-
 }

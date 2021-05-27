@@ -7,12 +7,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import com.bezkoder.spring.files.uploadmultiple.model.FileEntity;
+
+@Slf4j
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
@@ -30,6 +36,14 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   @Override
   public void save(MultipartFile file) {
     try {
+      FileEntity fileEntity = new FileEntity();
+      fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
+      fileEntity.setContentType(file.getContentType());
+      fileEntity.setData(file.getBytes());
+      fileEntity.setSize(file.getSize());
+
+    log.debug("fileEntity:  "+fileEntity.getName());
+
       Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
     } catch (Exception e) {
       throw new RuntimeException("Could not store the file. Error: " + e.getMessage());

@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -25,21 +26,24 @@ import com.bezkoder.spring.files.uploadmultiple.service.FilesStorageService;
 
 @Controller
 @CrossOrigin(origins = "*", maxAge = 3600)
+
+@Slf4j
 public class FilesController {
 
   @Autowired
   FilesStorageService filesStorageService;
 
-  @PostMapping("/upload")
+  @PostMapping("/files/upload")
   public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
     String message = "";
     try {
       List<String> fileNames = new ArrayList<>();
 
-      Arrays.asList(files).stream().forEach(file -> {
+      for (MultipartFile file : Arrays.asList(files)) {
+//        log.debug(file[0].getName());
         filesStorageService.save(file);
         fileNames.add(file.getOriginalFilename());
-      });
+      }
 
       message = "Uploaded the files successfully: " + fileNames;
       return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
