@@ -33,4 +33,16 @@ public class FileEntity {
 
     @Lob
     private byte[] data;
+
+    public FileEntity() {
+
+    }
+
+
+    public FileEntity(String name, String contentType, byte[] data) {
+        this.name = name;
+        this.contentType=contentType;
+        this.data = data;
+    }
+
 }

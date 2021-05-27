@@ -3,6 +3,7 @@ package com.bezkoder.spring.files.uploadmultiple.service;
 import com.bezkoder.spring.files.uploadmultiple.model.FileEntity;
 import com.bezkoder.spring.files.uploadmultiple.repository.FileRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,12 @@ import java.util.stream.Stream;
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
 
-//  @Autowired
-//  private FileRepository fileRepository;
+
+  @Autowired
+  private FileRepository fileRepository;
 
 
-    private FileRepository fileRepository;
+//    private FileRepository fileRepository;
 
 
     private final Path root = Paths.get("uploads");
@@ -45,19 +47,32 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         log.debug("hier");
 
         try {
+//            FileEntity fileEntity = new FileEntity(file.getName(),file.getContentType(),file.getBytes());
+
+
+
             FileEntity fileEntity = new FileEntity();
-            fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
-            fileEntity.setContentType(file.getContentType());
-            fileEntity.setData(file.getBytes());
-            fileEntity.setSize(file.getSize());
+
+
+//            fileEntity.setName(StringUtils.cleanPath(file.getOriginalFilename()));
+//            fileEntity.setContentType(file.getContentType());
+//            fileEntity.setData(file.getBytes());
+//            fileEntity.setSize(file.getSize());
+
+            fileEntity.setName("piet");
 
             System.out.println(fileEntity.getName());
             System.out.println(fileEntity.toString());
 
+
             fileRepository.save(fileEntity);
+
             System.out.println("done");
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
+
+//            return fileRepository.save(fileEntity);
+
         } catch (Exception e) {
+            log.error(e.getMessage(),e);
             throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
         }
     }
